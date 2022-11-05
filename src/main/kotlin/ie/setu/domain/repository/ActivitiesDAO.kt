@@ -47,9 +47,11 @@ class ActivitiesDAO {
     }
 
     fun update(id: Int, activity: Activity):Activity? {
-        Activities.update({ Activities.id.eq(id) }) {
-            it[calories] = activity.calories
-            it[activityName] = activity.activityName
+        transaction {
+            Activities.update({ Activities.id.eq(id) }) {
+                it[calories] = activity.calories
+                it[activityName] = activity.activityName
+            }
         }
         return this.findById(id);
     }

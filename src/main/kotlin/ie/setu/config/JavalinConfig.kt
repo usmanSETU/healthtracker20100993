@@ -1,7 +1,10 @@
 package ie.setu.config
 
+import ie.setu.controllers.ActivityController
 import ie.setu.controllers.UserController
 import ie.setu.controllers.Main
+import ie.setu.domain.Activity
+import ie.setu.domain.db.Activities
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
 class JavalinConfig {
@@ -40,6 +43,16 @@ class JavalinConfig {
                 path("/email/{email}"){
                     get(UserController::getUserByEmail)
                 }
+            }
+            path("api/activities"){
+                get(ActivityController::getAllActivities)
+                post(ActivityController::addActivity)
+                path("{id}"){
+                    patch(ActivityController::updateActivity)
+                    delete(ActivityController::deleteActivity)
+                    get(ActivityController::getActivityById)
+                }
+
             }
         }
     }
