@@ -21,13 +21,10 @@ class DbConfig{
         logger.info{"Starting DB Connection..."}
 
         val dbConfig = Database.connect(
-            "jdbc:postgresql://localhost:5432/health-tracker",
-//            "jdbc:postgresql://ec2-54-227-248-71.compute-1.amazonaws.com:5432/ddjvur53gjatcb?sslmode=require",
+            "jdbc:postgresql://ec2-54-227-248-71.compute-1.amazonaws.com:5432/ddjvur53gjatcb?sslmode=require",
             driver = "org.postgresql.Driver",
-//            user = "bvsztsgdbonvvk",
-//            password = "b077ea2d528fdc17f638f326aaadecc3c3ae1b5bcd7a10d859010d69cb4e5207"
-            user="postgres",
-            password=""
+            user = "bvsztsgdbonvvk",
+            password = "b077ea2d528fdc17f638f326aaadecc3c3ae1b5bcd7a10d859010d69cb4e5207"
         )
         transaction{
             SchemaUtils.createMissingTablesAndColumns(Users,Activities)
