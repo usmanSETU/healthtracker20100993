@@ -1,9 +1,9 @@
 package ie.setu.config
 
-import ie.setu.controllers.HealthTrackerController
+import ie.setu.controllers.UserController
+import ie.setu.controllers.Main
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
-
 class JavalinConfig {
 
     fun startJavalinService(): Javalin {
@@ -26,16 +26,19 @@ class JavalinConfig {
 
     private fun registerRoutes(app: Javalin) {
         app.routes {
+            path("/") {
+                get(Main::ping)
+            }
             path("/api/users") {
-                get(HealthTrackerController::getAllUsers)
-                post(HealthTrackerController::addUser)
+                get(UserController::getAllUsers)
+                post(UserController::addUser)
                 path("{user-id}"){
-                    get(HealthTrackerController::getUserByUserId)
-                    delete(HealthTrackerController::deleteUser)
-                    patch(HealthTrackerController::updateUser)
+                    get(UserController::getUserByUserId)
+                    delete(UserController::deleteUser)
+                    patch(UserController::updateUser)
                 }
                 path("/email/{email}"){
-                    get(HealthTrackerController::getUserByEmail)
+                    get(UserController::getUserByEmail)
                 }
             }
         }
