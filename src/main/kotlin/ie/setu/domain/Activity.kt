@@ -1,4 +1,3 @@
 package ie.setu.domain
 
-class Activity {
-}
+data class Activity (val id:Int, val userId:Int);

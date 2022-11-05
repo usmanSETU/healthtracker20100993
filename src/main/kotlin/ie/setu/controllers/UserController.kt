@@ -5,9 +5,8 @@ import ie.setu.domain.repository.UserDAO
 import io.javalin.http.Context
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import ie.setu.domain.UserDTO
 
-object HealthTrackerController {
+object UserController {
 
     private val userDao = UserDAO()
 

@@ -1,4 +1,9 @@
 package ie.setu.controllers
 
-object main {
+import io.javalin.http.Context
+
+object Main {
+    fun ping(ctx: Context){
+        ctx.json("{success:true}")
+    }
 }
