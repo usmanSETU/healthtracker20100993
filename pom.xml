@@ -82,6 +82,13 @@
             <artifactId>kotlin-logging</artifactId>
             <version>1.12.5</version>
         </dependency>
+
+        <!-- Vue Library -->
+        <dependency>
+            <groupId>org.webjars.npm</groupId>
+            <artifactId>vue</artifactId>
+            <version>3.2.41</version>
+        </dependency>
     </dependencies>
 
     <build>
