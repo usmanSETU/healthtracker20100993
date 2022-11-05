@@ -5,5 +5,6 @@ import org.jetbrains.exposed.sql.Table
 
 object Activities:Table("activities") {
     val id = integer("id").autoIncrement().primaryKey()
-    val userId = integer("userid").references(Users.id,ReferenceOption.CASCADE,ReferenceOption.CASCADE)
+    val calories = varchar("calories",255)
+    val activityName = varchar("activityName",255)
 }
