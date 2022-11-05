@@ -2,7 +2,7 @@ package ie.setu.config
 
 import ie.setu.controllers.ActivityController
 import ie.setu.controllers.UserController
-import ie.setu.controllers.Main
+import ie.setu.controllers.MainController
 import ie.setu.domain.Activity
 import ie.setu.domain.db.Activities
 import io.javalin.Javalin
