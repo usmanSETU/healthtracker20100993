@@ -30,20 +30,12 @@ class ActivitiesDAO {
         }
     }
 
-    fun findByUserID(id:Int):Activity?{
-        return transaction {
-            Activities.select(){
-                Activities.userId eq id}
-                .map { mapToActivities(it) }
-                .firstOrNull()
-        }
-    }
-
     fun save(activity: Activity){
         transaction {
             Activities.insert {
-                it[id]=activity.id;
-                it[userId] = activity.userId
+                it[id]=activity.id
+                it[calories] = activity.calories
+                it[activityName] = activity.activityName
             }
         }
     }
@@ -56,7 +48,8 @@ class ActivitiesDAO {
 
     fun update(id: Int, activity: Activity):Activity? {
         Activities.update({ Activities.id.eq(id) }) {
-            it[userId] = activity.userId;
+            it[calories] = activity.calories
+            it[activityName] = activity.activityName
         }
         return this.findById(id);
     }
