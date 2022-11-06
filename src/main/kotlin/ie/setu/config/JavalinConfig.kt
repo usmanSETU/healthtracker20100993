@@ -2,18 +2,24 @@ package ie.setu.config
 
 import ie.setu.controllers.ActivityController
 import ie.setu.controllers.UserController
-import ie.setu.controllers.Main
-import ie.setu.domain.Activity
-import ie.setu.domain.db.Activities
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
+import io.javalin.plugin.rendering.vue.JavalinVue
+import io.javalin.plugin.rendering.vue.VueComponent
+
 class JavalinConfig {
 
     fun startJavalinService(): Javalin {
 
         val app = Javalin.create().apply {
+            _conf.enableWebjars()
             exception(Exception::class.java) { e, _ -> e.printStackTrace() }
             error(404) { ctx -> ctx.json("404 - Not Found") }
+            with(JavalinVue){
+                vueVersion{
+                    it.vue3("app")
+                }
+            }
         }.start(getHerokuAssignedPort())
 
         registerRoutes(app)
@@ -29,8 +35,8 @@ class JavalinConfig {
 
     private fun registerRoutes(app: Javalin) {
         app.routes {
-            path("/") {
-                get(Main::ping)
+            path("/home") {
+                get(VueComponent("hello-world"))
             }
             path("/api/users") {
                 get(UserController::getAllUsers)
