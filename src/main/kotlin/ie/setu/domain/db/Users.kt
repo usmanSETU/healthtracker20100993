@@ -10,4 +10,5 @@ object Users : Table("users") {
     val id = integer("id").autoIncrement().primaryKey().uniqueIndex()
     val name = varchar("name", 100)
     val email = varchar("email", 255)
+    val password= varchar("password",255)
 }
