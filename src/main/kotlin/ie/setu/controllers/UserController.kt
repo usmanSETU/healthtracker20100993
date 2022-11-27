@@ -129,6 +129,7 @@ object UserController {
     fun authenticateUser(ctx: Context){
         val user = userDao.authenticate(ctx.formParam("email") as String,ctx.formParam("password") as String)
         if(user!=null){
+            ctx.sessionAttribute("id",user.id)
             return ctx.redirect("/home",302)
         }else{
             ctx.status(401).result("Invalid credentials")
