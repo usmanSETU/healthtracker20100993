@@ -22,7 +22,7 @@ class DbConfig{
             user = "eflinqga",
             password = "0We1w7m9NbtoJssZQ89waH8rr4tg7KQR"
         )
-        
+
         transaction{
             SchemaUtils.createMissingTablesAndColumns(Users,Activities)
         }
