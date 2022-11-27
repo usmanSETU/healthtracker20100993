@@ -30,7 +30,7 @@ class JavalinConfig {
                     it.vue3("app")
                 }
             }
-        }.start(getHerokuAssignedPort())
+        }.start(getRemoteAssignedPort())
 
         registerRoutes(app)
         return app
