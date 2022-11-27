@@ -1,5 +1,13 @@
 <template id="hello-world">
+  <header>
   <h1 class="hello-world">Health Tracker</h1>
+  <form
+    method="get"
+    action="/api/users/logout"
+  >
+  <button>Logout</button>
+  </form>
+  </header>
   <h3 class="title">Users</h3>
   <table>
     <tr>
@@ -55,9 +63,17 @@
    });
 </script>
 <style>
+  header{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:center;
+  }
   .hello-world {
     color: goldenrod;
     text-align:center;
+    margin-left:auto;
+    margin-right:auto;
   }
   .title{
     color: grey;

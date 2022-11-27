@@ -28,7 +28,9 @@
             name:""
         }),
         methods:{
-
+            async logout(){
+                await fetch("/api/users/logout")
+            }
         }
     });
 </script>

@@ -72,16 +72,19 @@ class JavalinConfig {
             path("/api/users") {
                 get(UserController::getAllUsers)
                 post(UserController::addUser)
-                path("{user-id}"){
-                    get(UserController::getUserByUserId)
-                    delete(UserController::deleteUser)
-                    patch(UserController::updateUser)
+                path("/login"){
+                    post(UserController::authenticateUser)
+                }
+                path("/logout"){
+                    get(UserController::logoutUser)
                 }
                 path("/email/{email}"){
                     get(UserController::getUserByEmail)
                 }
-                path("/login"){
-                    post(UserController::authenticateUser)
+                path("{user-id}"){
+                    get(UserController::getUserByUserId)
+                    delete(UserController::deleteUser)
+                    patch(UserController::updateUser)
                 }
             }
             path("api/activities"){
