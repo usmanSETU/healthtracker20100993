@@ -23,7 +23,11 @@ object ActivityController {
     )
     fun getAllActivities(ctx: Context) {
         logger.info {ctx.sessionAttribute("id")}
-        ctx.sessionAttribute<Int>("id")?.let { ActivityDAO.findByUserId(it) }?.let { ctx.json(ActivityDAO.getAll()) }
+        if(ctx.sessionAttribute<Int>("id") != null) {
+            ctx.json(ActivityDAO.findByUserId(ctx.sessionAttribute<Int>("id")!!.toInt()))
+        }else{
+            ctx.json(ActivityDAO.getAll())
+        }
     }
 
     @OpenApi(
@@ -102,7 +106,7 @@ object ActivityController {
         method = HttpMethod.GET,
         pathParams = [OpenApiParam("userId",Int::class,"Id of the user to get activities for")]
     )
-    fun getActivitiesByUserID(ctx: Context){
+    fun getActivitiesByUserID(ctx: Context): ArrayList<Activity> {
         return ActivityDAO.findByUserId(ctx.pathParam("userId").toInt())
     }
 }

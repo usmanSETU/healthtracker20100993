@@ -52,14 +52,16 @@ class ActivitiesDAO {
         return this.findById(id)
     }
 
-    fun findByUserId(userId:Int){
+    fun findByUserId(userId:Int): ArrayList<Activity> {
+        val activitiesList: ArrayList<Activity> = arrayListOf()
         transaction {
             Activities.select(){
                 Activities.userId eq userId
             }.map {
-                mapToActivities(it)
+                activitiesList.add(mapToActivities(it))
             }
         }
+        return activitiesList
     }
 
 }
