@@ -1,3 +1,4 @@
+/*
 package ie.setu.helpers
 
 import ie.setu.domain.Activity
@@ -21,4 +22,4 @@ val activities = arrayListOf<Activity>(
     Activity(calories = "20", activityName = "Task2", id = 2),
     Activity(calories = "30", activityName = "Task3", id = 3)
 
-)
+)*/
