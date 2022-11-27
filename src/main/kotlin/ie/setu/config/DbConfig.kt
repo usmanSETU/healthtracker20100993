@@ -15,22 +15,14 @@ class DbConfig{
     fun getDbConnection() :Database{
 
         logger.info{"Starting DB Connection..."}
-        val PGUSER = "eflinqga"
-        val PGPASSWORD = "0We1w7m9NbtoJssZQ89waH8rr4tg7KQR"
-        val PGHOST = "lucky.db.elephantsql.com"
-        val PGPORT = "5432"
-        val PGDATABASE = "eflinqga"
-        val ssl_certificate ="ssl=true"
 
-        //url format should be jdbc:postgresql://host:port/database
-        val url = "jdbc:postgresql://$PGHOST:$PGPORT/$PGDATABASE/$ssl_certificate"
-
-        val dbConfig = Database.connect(url,
-            driver="org.postgresql.Driver",
-            user = PGUSER,
-            password = PGPASSWORD
-
+        val dbConfig = Database.connect(
+            "jdbc:postgresql://lucky.db.elephantsql.com:5432/eflinqga?sslmode=require",
+            driver = "org.postgresql.Driver",
+            user = "eflinqga",
+            password = "0We1w7m9NbtoJssZQ89waH8rr4tg7KQR"
         )
+        
         transaction{
             SchemaUtils.createMissingTablesAndColumns(Users,Activities)
         }
