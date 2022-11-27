@@ -1,45 +1,40 @@
-<template id="login">
+<template id="signup">
 <form
-  id="login-form"
-  action="/api/users/login"
+  id="signup-form"
+  action="/api/users"
   method="post"
 >
-    <div class="login">
-        <div class="login-card">
-            <h1>Login</h1>
+    <div class="signup">
+        <div class="signup-card">
+            <h1>Sign Up</h1>
+            <label for="name">Name</label>
+            <input v-model="name" required type="text" name="name" :placeholder="">
             <label for="email">Email</label>
             <input v-model="email" required type="email" name="email" :placeholder="">
             <label for="password">Password</label>
             <input v-model="password" required type="password" name="password" :placeholder="">
-            <button type="submit">Login</button>
+            <button type="submit">signup</button>
         </div>
     </div>
     </form>
 </template>
 
 <script>
-    app.component("Login",{
-        template:"#login",
+    app.component("signup",{
+        template:"#signup",
         data:()=>({
             email:"",
-            password:""
+            password:"",
+            name:""
         }),
         methods:{
-            async submit(){
-                const data = await fetch('/login',{
-                    method:"post",
-                    body:JSON.stringify({email:this.email,password:this.password})
-                });
-                console.log(data);
-                if(data.redirected === true)
-                    console.log(window);
-            }
+
         }
     });
 </script>
 
 <style>
-    .login{
+    .signup{
         height:100%;
         width:100%;
         background-color:white;
@@ -47,10 +42,10 @@
         justify-content:center;
         align-items:center;
     }
-    .login label{
+    .signup label{
         align-self:start;
     }
-    .login .login-card{
+    .signup .signup-card{
         display:flex;
         flex-direction:column;
         justify-content:center;
@@ -61,11 +56,11 @@
         width:50%;
     }
 
-    .login .login-card h1{
+    .signup .signup-card h1{
         text-align:center;
     }
 
-    .login .login-card input{
+    .signup .signup-card input{
         border:none;
         border-radius: 10px;
         margin:10px 0 10px 0;
@@ -74,7 +69,7 @@
         width:100%;
     }
 
-    .login .login-card button{
+    .signup .signup-card button{
         width:25%;
         background-color:#3478e3;
         color:white;
@@ -82,7 +77,7 @@
         border:none;
         border-radius:10px;
     }
-    .login .login-card button:hover{
+    .signup .signup-card button:hover{
         color:#3478e3;
         background-color:white;
     }
