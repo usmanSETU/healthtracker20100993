@@ -3,13 +3,14 @@ package ie.setu.controllers
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import ie.setu.domain.Activity
-import ie.setu.domain.User
 import ie.setu.domain.repository.ActivitiesDAO
 import io.javalin.http.Context
 import io.javalin.plugin.openapi.annotations.*
+import mu.KotlinLogging
 
 object ActivityController {
     private val ActivityDAO = ActivitiesDAO()
+    private val logger = KotlinLogging.logger(){}
 
     @OpenApi(
         summary = "Get all activities",
@@ -21,7 +22,12 @@ object ActivityController {
         responses = [OpenApiResponse("200", [OpenApiContent(Array<Activity>::class)])]
     )
     fun getAllActivities(ctx: Context) {
-        ctx.json(ActivityDAO.getAll())
+        logger.info {ctx.sessionAttribute("id")}
+        if(ctx.sessionAttribute<Int>("id") != null) {
+            ctx.json(ActivityDAO.findByUserId(ctx.sessionAttribute<Int>("id")!!.toInt()))
+        }else{
+            ctx.json(ActivityDAO.getAll())
+        }
     }
 
     @OpenApi(
@@ -89,5 +95,18 @@ object ActivityController {
         ActivityDAO.update(
             id = ctx.pathParam("id").toInt(),
             activity = activityUpdates)
+    }
+
+    @OpenApi(
+        summary = "Get Activities by user",
+        operationId = "getAcitivitiesByUser",
+        description = "This endpoint returns all the activities of the user provided",
+        tags = ["Activities"],
+        path="/api/activities/{userid}",
+        method = HttpMethod.GET,
+        pathParams = [OpenApiParam("userId",Int::class,"Id of the user to get activities for")]
+    )
+    fun getActivitiesByUserID(ctx: Context): ArrayList<Activity> {
+        return ActivityDAO.findByUserId(ctx.pathParam("userId").toInt())
     }
 }

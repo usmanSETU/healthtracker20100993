@@ -17,4 +17,5 @@ fun mapToActivities(it: ResultRow) = Activity(
     id = it[Activities.id],
     activityName = it[Activities.activityName],
     calories = it[Activities.calories],
+    userId = it[Activities.userId]
 )

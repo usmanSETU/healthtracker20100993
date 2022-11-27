@@ -1,13 +1,9 @@
 package ie.setu.domain.repository
 
 import ie.setu.domain.Activity
-import ie.setu.domain.User
 import ie.setu.domain.db.Activities
-import ie.setu.domain.db.Users
 import ie.setu.utils.mapToActivities
-import ie.setu.utils.mapToUser
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class ActivitiesDAO {
@@ -18,7 +14,7 @@ class ActivitiesDAO {
             Activities.selectAll().map {
                 activitiesList.add(mapToActivities(it)) }
         }
-        return activitiesList;
+        return activitiesList
     }
 
     fun findById(id: Int): Activity?{
@@ -35,6 +31,7 @@ class ActivitiesDAO {
             Activities.insert {
                 it[calories] = activity.calories
                 it[activityName] = activity.activityName
+                it[userId] = activity.userId
             }
         }
     }
@@ -52,7 +49,19 @@ class ActivitiesDAO {
                 it[activityName] = activity.activityName
             }
         }
-        return this.findById(id);
+        return this.findById(id)
+    }
+
+    fun findByUserId(userId:Int): ArrayList<Activity> {
+        val activitiesList: ArrayList<Activity> = arrayListOf()
+        transaction {
+            Activities.select(){
+                Activities.userId eq userId
+            }.map {
+                activitiesList.add(mapToActivities(it))
+            }
+        }
+        return activitiesList
     }
 
 }

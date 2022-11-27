@@ -7,4 +7,5 @@ object Activities:Table("activities") {
     val id = integer("id").autoIncrement().primaryKey()
     val calories = varchar("calories",255)
     val activityName = varchar("activityName",255)
+    val userId = integer("userId").references(Users.id, onDelete = ReferenceOption.CASCADE, onUpdate = ReferenceOption.CASCADE)
 }
