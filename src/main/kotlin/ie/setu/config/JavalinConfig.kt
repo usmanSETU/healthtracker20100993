@@ -2,6 +2,7 @@ package ie.setu.config
 
 import ie.setu.controllers.ActivityController
 import ie.setu.controllers.UserController
+import ie.setu.utils.sqlSessionHandler
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
 import io.javalin.plugin.openapi.OpenApiOptions
@@ -11,16 +12,17 @@ import io.javalin.plugin.rendering.vue.VueComponent
 import io.javalin.plugin.openapi.ui.SwaggerOptions
 import io.javalin.plugin.openapi.ui.ReDocOptions
 import io.swagger.v3.oas.models.info.Info
+import org.jetbrains.exposed.sql.Database
 
 class JavalinConfig {
-
-    fun startJavalinService(): Javalin {
+    fun startJavalinService(db: Database): Javalin {
 
         val app = Javalin.create{
             it.registerPlugin(getConfiguredOpenApiPlugin())
-            it.defaultContentType = "application/json"}.apply {
-            _conf.enableWebjars()
-
+            it.defaultContentType = "application/json"
+            it.sessionHandler { sqlSessionHandler( db.url) }
+            it.enableWebjars()
+        }.apply {
             exception(Exception::class.java) { e, _ -> e.printStackTrace() }
             error(404) { ctx -> ctx.json("404 - Not Found") }
             with(JavalinVue){
@@ -58,6 +60,12 @@ class JavalinConfig {
 
     private fun registerRoutes(app: Javalin) {
         app.routes {
+            path("/"){
+                get(VueComponent("Login"))
+            }
+            path("/signup"){
+                get(VueComponent("signup"))
+            }
             path("/home") {
                 get(VueComponent("hello-world"))
             }
@@ -71,6 +79,9 @@ class JavalinConfig {
                 }
                 path("/email/{email}"){
                     get(UserController::getUserByEmail)
+                }
+                path("/login"){
+                    post(UserController::authenticateUser)
                 }
             }
             path("api/activities"){
