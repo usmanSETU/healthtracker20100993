@@ -12,11 +12,9 @@ import io.javalin.plugin.rendering.vue.VueComponent
 import io.javalin.plugin.openapi.ui.SwaggerOptions
 import io.javalin.plugin.openapi.ui.ReDocOptions
 import io.swagger.v3.oas.models.info.Info
-import mu.KotlinLogging
 import org.jetbrains.exposed.sql.Database
 
 class JavalinConfig {
-    private val logger = KotlinLogging.logger {};
     fun startJavalinService(db: Database): Javalin {
 
         val app = Javalin.create{
@@ -62,16 +60,11 @@ class JavalinConfig {
 
     private fun registerRoutes(app: Javalin) {
         app.routes {
-            path("/login"){
-                post("/"){ ctx->
-                    logger.info {ctx.body()}
-                    ctx.sessionAttribute("my-key", "My value")
-//                    ctx.result("Wrote value: " + ctx.sessionAttribute<Any>("my-key"))
-                    ctx.redirect("/home")
-                };
-            }
             path("/"){
                 get(VueComponent("Login"))
+            }
+            path("/signup"){
+                get(VueComponent("signup"))
             }
             path("/home") {
                 get(VueComponent("hello-world"))
@@ -86,6 +79,9 @@ class JavalinConfig {
                 }
                 path("/email/{email}"){
                     get(UserController::getUserByEmail)
+                }
+                path("/login"){
+                    post(UserController::authenticateUser)
                 }
             }
             path("api/activities"){
