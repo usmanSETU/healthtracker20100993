@@ -12,15 +12,14 @@ import io.javalin.plugin.rendering.vue.VueComponent
 import io.javalin.plugin.openapi.ui.SwaggerOptions
 import io.javalin.plugin.openapi.ui.ReDocOptions
 import io.swagger.v3.oas.models.info.Info
-import org.jetbrains.exposed.sql.Database
 
 class JavalinConfig {
-    fun startJavalinService(db: Database): Javalin {
+    fun startJavalinService(): Javalin {
 
         val app = Javalin.create{
             it.registerPlugin(getConfiguredOpenApiPlugin())
             it.defaultContentType = "application/json"
-            it.sessionHandler { sqlSessionHandler( db.url) }
+            it.sessionHandler { sqlSessionHandler() }
             it.enableWebjars()
         }.apply {
             exception(Exception::class.java) { e, _ -> e.printStackTrace() }
@@ -37,7 +36,7 @@ class JavalinConfig {
     }
 
 
-    fun getConfiguredOpenApiPlugin() = OpenApiPlugin(
+    private fun getConfiguredOpenApiPlugin() = OpenApiPlugin(
         OpenApiOptions(
             Info().apply {
                 title("Health Tracker App")

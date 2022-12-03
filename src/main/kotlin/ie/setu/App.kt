@@ -5,7 +5,7 @@ import ie.setu.config.JavalinConfig
 
 fun main() {
 
-    val db = DbConfig().getDbConnection()
-    JavalinConfig().startJavalinService(db)
+    DbConfig().getDbConnection()
+    JavalinConfig().startJavalinService()
 
 }
