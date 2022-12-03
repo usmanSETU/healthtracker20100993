@@ -8,11 +8,11 @@
         <div class="signup-card">
             <h1>Sign Up</h1>
             <label for="name">Name</label>
-            <input v-model="name" required type="text" name="name" :placeholder="">
+            <input v-model="name" required type="text" name="name" placeholder="Enter Name" id="name">
             <label for="email">Email</label>
-            <input v-model="email" required type="email" name="email" :placeholder="">
+            <input v-model="email" required type="email" name="email" placeholder="Enter Email" id="email">
             <label for="password">Password</label>
-            <input v-model="password" required type="password" name="password" :placeholder="">
+            <input v-model="password" required type="password" name="password" placeholder="Enter Password"  id="password">
             <button type="submit">signup</button>
         </div>
     </div>
@@ -20,6 +20,7 @@
 </template>
 
 <script>
+    // noinspection JSAnnotator
     app.component("signup",{
         template:"#signup",
         data:()=>({
