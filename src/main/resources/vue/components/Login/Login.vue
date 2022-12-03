@@ -8,9 +8,9 @@
         <div class="login-card">
             <h1>Login</h1>
             <label for="email">Email</label>
-            <input v-model="email" required type="email" name="email" :placeholder="">
+            <input v-model="email" required type="email" name="email" placeholder="Enter Email" id="email">
             <label for="password">Password</label>
-            <input v-model="password" required type="password" name="password" :placeholder="">
+            <input v-model="password" required type="password" name="password" placeholder="Enter Password" id="password">
             <button type="submit">Login</button>
         </div>
     </div>
@@ -18,8 +18,9 @@
 </template>
 
 <script>
+    // noinspection JSAnnotator
     app.component("Login",{
-        template:"#login",
+        template:'#login',
         data:()=>({
             email:"",
             password:""
