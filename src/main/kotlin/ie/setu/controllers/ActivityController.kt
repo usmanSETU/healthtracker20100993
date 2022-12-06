@@ -59,8 +59,19 @@ object ActivityController {
     fun addActivity(ctx: Context) {
         val mapper = jacksonObjectMapper()
         val activity = mapper.readValue<Activity>(ctx.body())
-        ActivityDAO.save(activity)
-        ctx.json(activity)
+        if (activity.userId == 0 && ctx.sessionAttribute<Int>("id") == null ){
+             ctx.status(401).result("Unauthorized")
+        }else {
+            if(activity.userId == 0) {
+                activity.userId = ctx.sessionAttribute<Int>("id")!!
+            }
+            val insertedRow = ActivityDAO.save(activity)
+            if (insertedRow != null) {
+                ctx.json(insertedRow)
+            }else{
+                ctx.status(500).result("Something went wrong")
+            }
+        }
     }
 
 
@@ -89,12 +100,17 @@ object ActivityController {
         requestBody = OpenApiRequestBody([OpenApiContent(Activity::class)]),
         responses = [OpenApiResponse("200"),OpenApiResponse("500"),OpenApiResponse("404")]
     )
-    fun updateActivity(ctx: Context){
+    fun updateActivity(ctx: Context) {
         val mapper = jacksonObjectMapper()
         val activityUpdates = mapper.readValue<Activity>(ctx.body())
-        ActivityDAO.update(
+        val updatedActivity =  ActivityDAO.update(
             id = ctx.pathParam("id").toInt(),
             activity = activityUpdates)
+        if(updatedActivity != null){
+            ctx.json(updatedActivity)
+        }else{
+            ctx.status(500).result("Internal Server Error")
+        }
     }
 
     @OpenApi(
