@@ -17,7 +17,7 @@ fun sqlSessionHandler(): SessionHandler = SessionHandler().apply {
         sessionDataStore = JDBCSessionDataStoreFactory().apply {
             setDatabaseAdaptor(DatabaseAdaptor().apply {
                 setDriverInfo("org.postgresql.Driver",
-                    "jdbc:postgresql://lucky.db.elephantsql.com:5432/eflinqga?sslmode=require&user=eflinqga&password=0We1w7m9NbtoJssZQ89waH8rr4tg7KQR")
+                    "jdbc:postgresql://localhost:5432/health-tracker?user=postgres&password=password")
 //                datasource = db // you can set data source here (for connection pooling, etc)
             })
         }.getSessionDataStore(sessionHandler)
