@@ -11,7 +11,7 @@
 
   <section class="activtity-header">
   <h3 class="title">Activities</h3>
-    <button class="btn add-btn" @click="showAddModal">Add Activity</button>
+    <button class="btn add-btn" @click="showModal('modal')">Add Activity</button>
   </section>
     <table>
       <tr>
@@ -112,7 +112,7 @@
           this.activities.push(data)
           this.addActivity.calories=null
           this.addActivity.name=null
-          this.closeModal()
+          this.closeModal("modal")
         } catch (err){
           console.log(err)
           console.log(err)
