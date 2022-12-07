@@ -40,13 +40,17 @@
 </script>
 
 <style>
+body{
+  background-color: black;
+  color: white;
+}
     .login{
         height:100%;
         width:100%;
-        background-color:white;
         display:flex;
         justify-content:center;
         align-items:center;
+
     }
     .login label{
         align-self:start;
