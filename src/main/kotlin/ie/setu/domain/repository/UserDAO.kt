@@ -53,13 +53,14 @@ class UserDAO {
         }
     }
 
-    fun update(id: Int, user: User){
+    fun update(id: Int, user: User): User? {
         transaction {
             Users.update({Users.id eq id}){
                 it[email] = user.email
                 it[name] = user.name
             }
         }
+        return this.findById(id)
     }
 
     fun authenticate(email:String,password:String):User?{
