@@ -1,6 +1,7 @@
 package ie.setu.config
 
 import ie.setu.controllers.ActivityController
+import ie.setu.controllers.ProfileController
 import ie.setu.controllers.UserController
 import ie.setu.utils.sqlSessionHandler
 import io.javalin.Javalin
@@ -68,6 +69,9 @@ class JavalinConfig {
             path("/home") {
                 get(VueComponent("hello-world"))
             }
+            path("/profile"){
+                get(VueComponent("profile"))
+            }
             path("/api/users") {
                 get(UserController::getAllUsers)
                 post(UserController::addUser)
@@ -95,6 +99,10 @@ class JavalinConfig {
                     get(ActivityController::getActivityById)
                 }
 
+            }
+            path("/api/profile"){
+                get(ProfileController::getUserProfile)
+                patch(ProfileController::updateUserProfile)
             }
         }
     }

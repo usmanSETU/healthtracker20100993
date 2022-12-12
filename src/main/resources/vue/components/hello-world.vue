@@ -1,12 +1,15 @@
 <template id="hello-world">
   <header>
-  <h1 class="hello-world">Health Tracker</h1>
-  <form
-    method="get"
-    action="/api/users/logout"
-  >
-  <button class="btn logout-btn">Logout</button>
-  </form>
+    <h1 class="hello-world">Health Tracker</h1>
+    <div>
+      <form
+        method="get"
+        action="/api/users/logout"
+      >
+      <button class="btn logout-btn">Logout</button>
+      </form>
+      <a class="btn link-btn" href="/profile">Profile</a>
+    </div>
   </header>
 
   <section class="activtity-header">
@@ -155,10 +158,6 @@
    });
 </script>
 <style>
-  body{
-    background-color: rgba(0,0,0,0.9);
-    color: white;
-  }
   header{
     display:flex;
     flex-direction:row;
@@ -176,8 +175,8 @@
     text-align:center;
   }
   table, th, td {
-    border:1px solid white;
-    color: whitesmoke;
+    border:1px solid black;
+    color: black;
     text-align: center;
     width:25%;
   }
@@ -308,6 +307,14 @@
     color: black;
     text-decoration: none;
     cursor: pointer;
+  }
+  .link-btn{
+    color:white;
+    background-color: lightblue;
+  }
+  .link-btn:hover{
+    color:lightblue;
+    background-color: white;
   }
 
 </style>
