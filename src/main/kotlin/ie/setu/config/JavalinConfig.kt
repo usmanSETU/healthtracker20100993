@@ -1,8 +1,7 @@
 package ie.setu.config
 
-import ie.setu.controllers.ActivityController
-import ie.setu.controllers.ProfileController
-import ie.setu.controllers.UserController
+import ie.setu.controllers.*
+import ie.setu.domain.Running
 import ie.setu.utils.sqlSessionHandler
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.*
@@ -103,6 +102,36 @@ class JavalinConfig {
             path("/api/profile"){
                 get(ProfileController::getUserProfile)
                 patch(ProfileController::updateUserProfile)
+            }
+            path("api/blood-pressure"){
+                get(BloodPressureController::getAllActivities)
+                post(BloodPressureController::addActivity)
+                path("{id}"){
+                    patch(BloodPressureController::updateActivity)
+                    delete(BloodPressureController::deleteActivity)
+                    get(BloodPressureController::getActivityById)
+                }
+
+            }
+            path("api/running"){
+                get(RunningsController::getAllActivities)
+                post(RunningsController::addActivity)
+                path("{id}"){
+                    patch(RunningsController::updateActivity)
+                    delete(RunningsController::deleteActivity)
+                    get(RunningsController::getActivityById)
+                }
+
+            }
+            path("api/temperature"){
+                get(TemperatureController::getAllActivities)
+                post(TemperatureController::addActivity)
+                path("{id}"){
+                    patch(TemperatureController::updateActivity)
+                    delete(TemperatureController::deleteActivity)
+                    get(TemperatureController::getActivityById)
+                }
+
             }
         }
     }

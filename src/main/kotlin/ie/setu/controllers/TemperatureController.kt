@@ -8,7 +8,7 @@ import io.javalin.http.Context
 import io.javalin.plugin.openapi.annotations.*
 import mu.KotlinLogging
 
-object Temperature {
+object TemperatureController {
     private val temperatureDAO = TemperatureDAO()
     private val logger = KotlinLogging.logger(){}
 
