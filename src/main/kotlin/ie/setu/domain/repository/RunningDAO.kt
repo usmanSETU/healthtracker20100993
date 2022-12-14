@@ -35,6 +35,7 @@ class RunningDAO {
                 it[distance] = running.distance
                 it[calories] = running.calories
                 it[userId] = running.userId
+                it[createdAt] = running.createdAt
             }
         } get Runings.id
         logger.info { "Inserted ID $insertedId" }

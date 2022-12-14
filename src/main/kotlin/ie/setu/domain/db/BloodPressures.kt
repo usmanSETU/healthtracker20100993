@@ -10,4 +10,5 @@ object BloodPressures: Table("blood_pressure") {
     val systolic = integer("systolic")
     val diastolic = integer("diastolic")
     val userId = integer("userId").references(Users.id,ReferenceOption.CASCADE,ReferenceOption.CASCADE)
+    val createdAt = datetime("createdAt")
 }

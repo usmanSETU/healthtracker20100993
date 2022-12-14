@@ -35,6 +35,7 @@ class ActivitiesDAO {
                 it[calories] = activity.calories
                 it[activityName] = activity.activityName
                 it[userId] = activity.userId
+                it[createdAt] = activity.createdAt
             }
         } get Activities.id
         logger.info { "Inserted ID $insertedId" }
