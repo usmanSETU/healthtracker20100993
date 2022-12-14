@@ -35,6 +35,7 @@ class BloodPressureDAO {
                 it[systolic] = bloodPressure.systolic
                 it[diastolic] = bloodPressure.diastolic
                 it[userId] = bloodPressure.userId
+                it[createdAt] = bloodPressure.createdAt
             }
         } get BloodPressures.id
         logger.info { "Inserted ID $insertedId" }
