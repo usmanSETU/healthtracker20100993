@@ -1,5 +1,6 @@
 package ie.setu.controllers
 
+import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import ie.setu.domain.Activity
@@ -12,6 +13,8 @@ import mu.KotlinLogging
 object BloodPressureController {
     private val bloodPressureDAO = BloodPressureDAO()
     private val logger = KotlinLogging.logger(){}
+    private val mapper = jacksonObjectMapper().registerModule(JodaModule())
+
 
     @OpenApi(
         summary = "Get all Blood Pressure Activities",
@@ -25,9 +28,9 @@ object BloodPressureController {
     fun getAllActivities(ctx: Context) {
         this.logger.info {ctx.sessionAttribute("id")}
         if(ctx.sessionAttribute<Int>("id") != null) {
-            ctx.json(this.bloodPressureDAO.findByUserId(ctx.sessionAttribute<Int>("id")!!.toInt()))
+            ctx.json(this.mapper.writeValueAsString(this.bloodPressureDAO.findByUserId(ctx.sessionAttribute<Int>("id")!!.toInt())))
         }else{
-            ctx.json(this.bloodPressureDAO.getAll())
+            ctx.json(this.mapper.writeValueAsString(this.bloodPressureDAO.getAll()))
         }
     }
 
@@ -44,7 +47,7 @@ object BloodPressureController {
     fun getActivityById(ctx: Context) {
         val activity = this.bloodPressureDAO.findById(ctx.pathParam("id").toInt())
         if (activity != null) {
-            ctx.json(activity)
+            ctx.json(this.mapper.writeValueAsString(activity))
         }
     }
 
@@ -58,8 +61,7 @@ object BloodPressureController {
         responses = [OpenApiResponse("200"),OpenApiResponse("500")]
     )
     fun addActivity(ctx: Context) {
-        val mapper = jacksonObjectMapper()
-        val activity = mapper.readValue<BloodPressure>(ctx.body())
+        val activity = this.mapper.readValue<BloodPressure>(ctx.body())
         if (activity.userId == 0 && ctx.sessionAttribute<Int>("id") == null ){
             ctx.status(401).result("Unauthorized")
         }else {
@@ -68,7 +70,7 @@ object BloodPressureController {
             }
             val insertedRow =this.bloodPressureDAO.save(activity)
             if (insertedRow != null) {
-                ctx.json(insertedRow)
+                ctx.json(this.mapper.writeValueAsString(insertedRow))
             }else{
                 ctx.status(500).result("Something went wrong")
             }
@@ -102,13 +104,12 @@ object BloodPressureController {
         responses = [OpenApiResponse("200"),OpenApiResponse("500"),OpenApiResponse("404")]
     )
     fun updateActivity(ctx: Context) {
-        val mapper = jacksonObjectMapper()
-        val activityUpdates = mapper.readValue<BloodPressure>(ctx.body())
+        val activityUpdates = this.mapper.readValue<BloodPressure>(ctx.body())
         val updatedActivity =  this.bloodPressureDAO.update(
             id = ctx.pathParam("id").toInt(),
             bloodPressure = activityUpdates)
         if(updatedActivity != null){
-            ctx.json(updatedActivity)
+            ctx.json(this.mapper.writeValueAsString(updatedActivity))
         }else{
             ctx.status(500).result("Internal Server Error")
         }

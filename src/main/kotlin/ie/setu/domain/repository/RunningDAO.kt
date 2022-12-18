@@ -31,7 +31,6 @@ class RunningDAO {
     fun save(running: Running): Running? {
         val insertedId = transaction {
             Runings.insert {
-                it[id] = running.id
                 it[distance] = running.distance
                 it[calories] = running.calories
                 it[userId] = running.userId
@@ -54,7 +53,6 @@ class RunningDAO {
             Runings.update({ Runings.id.eq(id) }) {
                 it[distance] = running.distance
                 it[calories] = running.calories
-                it[userId] = running.userId
             }
         }
         return this.findById(id)

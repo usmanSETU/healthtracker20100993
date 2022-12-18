@@ -16,23 +16,104 @@
   <h3 class="title">Activities</h3>
     <button class="btn add-btn" @click="showModal('modal')">Add Activity</button>
   </section>
+
+  <section class="table-container">
     <table>
       <tr>
           <th>Id</th>
           <th>Name</th>
           <th>Calories</th>
+          <th>Date / Time</th>
           <th>Actions</th>
       </tr>
       <tr v-for="activity in activities" :key="activity.id">
           <td>{{activity.id}}</td>
           <td>{{activity.activityName}}</td>
           <td>{{activity.calories}}</td>
+          <td>{{new Date(activity.createdAt).toDateString()}}</td>
           <td class="action-container">
-            <button class="btn edit-btn" @click="showEditModal(activity.id)">Edit</button>
-            <button class="btn delete-btn" @click="deleteActivity(activity.id)">Delete</button>
+            <button class="btn edit-btn" @click="showEditModal('general',activity.id)">Edit</button>
+            <button class="btn delete-btn" @click="deleteActivity('general',activity.id)">Delete</button>
           </td>
       </tr>
     </table>
+  </section>
+
+  <section class="activtity-header">
+    <h3 class="title">Blood Pressure Activities</h3>
+    <button class="btn add-btn" @click="showModal('modal')">Add Activity</button>
+  </section>
+  <section class="table-container">
+    <table>
+      <tr>
+        <th>Id</th>
+        <th>Systolic</th>
+        <th>Diastolic</th>
+        <th>Date / Time</th>
+        <th>Actions</th>
+      </tr>
+      <tr v-for="activity in bloodPressureActivities" :key="activity.id">
+        <td>{{activity.id}}</td>
+        <td>{{activity.systolic}}</td>
+        <td>{{activity.diastolic}}</td>
+        <td>{{new Date(activity.createdAt).toDateString()}}</td>
+        <td class="action-container">
+          <button class="btn edit-btn" @click="showEditModal('blood_pressure',activity.id)">Edit</button>
+          <button class="btn delete-btn" @click="deleteActivity('blood_pressure',activity.id)">Delete</button>
+        </td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="activtity-header">
+    <h3 class="title">Running Activities</h3>
+    <button class="btn add-btn" @click="showModal('modal')">Add Activity</button>
+  </section>
+  <section class="table-container">
+    <table>
+      <tr>
+        <th>Id</th>
+        <th>Distance</th>
+        <th>Calories</th>
+        <th>Date / Time</th>
+        <th>Actions</th>
+      </tr>
+      <tr v-for="activity in runningActivities" :key="activity.id">
+        <td>{{activity.id}}</td>
+        <td>{{activity.distance}}</td>
+        <td>{{activity.calories}}</td>
+        <td>{{new Date(activity.createdAt).toDateString()}}</td>
+        <td class="action-container">
+          <button class="btn edit-btn" @click="showEditModal('running',activity.id)">Edit</button>
+          <button class="btn delete-btn" @click="deleteActivity('running',activity.id)">Delete</button>
+        </td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="activtity-header">
+    <h3 class="title">Temperature Activities</h3>
+    <button class="btn add-btn" @click="showModal('modal')">Add Activity</button>
+  </section>
+  <section class="table-container">
+    <table>
+      <tr>
+        <th>Id</th>
+        <th>Temperature</th>
+        <th>Date / Time</th>
+        <th>Actions</th>
+      </tr>
+      <tr v-for="activity in temperatureActivities" :key="activity.id">
+        <td>{{activity.id}}</td>
+        <td>{{activity.temperature}}</td>
+        <td>{{new Date(activity.createdAt).toDateString()}}</td>
+        <td class="action-container">
+          <button class="btn edit-btn" @click="showEditModal('temperature',activity.id)">Edit</button>
+          <button class="btn delete-btn" @click="deleteActivity('temperature',activity.id)">Delete</button>
+        </td>
+      </tr>
+    </table>
+  </section>
 
   <div class="modal" id="modal">
     <div class="modal-content">
@@ -41,11 +122,45 @@
       </div>
       <div class="modal-body">
         <div class="add-from" >
-          <label for="name">Name</label>
-          <input id="name" type="text" v-model="addActivity.name" placeholder="Add Activity Name" required>
-          <label for="calories">Calories</label>
-          <input id="calories" type="number" v-model="addActivity.calories" placeholder="Add Calories" required>
-          <button class="btn submit-btn" @click="createActivity">Add Activity</button>
+          <label for="activity_type">Activity Type</label>
+          <select id="activity_type" v-model="addActivity.activity_type" default="blood_pressure">
+            <option value="blood_pressure">Blood Pressure</option>
+            <option value="running">Running</option>
+            <option value="temperature">Temperature</option>
+            <option value="general">General Activity</option>
+          </select>
+
+<!--          Blood Pressure Activity-->
+          <div v-if="addActivity.activity_type === 'blood_pressure'">
+            <label for="systolic">Systolic</label>
+            <input id="systolic" type="number" v-model="addActivity.systolic" placeholder="Systolic value" required/>
+            <label for="diastolic">Diastolic</label>
+            <input id="diastolic" type="number" v-model="addActivity.diastolic" placeholder="Diastolic value" required/>
+          </div>
+
+<!--          Running Activity-->
+          <div v-if="addActivity.activity_type === 'running'">
+            <label for="distance">Distance</label>
+            <input id="distance" type="number" v-model="addActivity.distance" placeholder="Distance value" required/>
+            <label for="calories">Calories</label>
+            <input id="calories" type="number" v-model="addActivity.calories" placeholder="Calories value" required/>
+          </div>
+
+<!--          Temperature Activity-->
+          <div v-if="addActivity.activity_type === 'temperature'">
+            <label for="temperature">Temperature</label>
+            <input id="temperature" type="number" v-model="addActivity.temperature" placeholder="Temperature value" required/>
+          </div>
+
+          <div v-if="addActivity.activity_type === 'general'">
+            <label for="name">Name</label>
+            <input id="name" type="text" v-model="addActivity.name" placeholder="Name" required>
+            <label for="calories">Calories</label>
+            <input id="calories" type="number" v-model="addActivity.calories" placeholder="Add Calories" required>
+          </div>
+          <label for="createdAt">Date and time</label>
+          <input id="createdAt" type="datetime-local" v-model="addActivity.createdAt" placeholder="add date and time" required/>
+          <button class="btn submit-btn" @click="createActivity" :disabled="!addActivity.activity_type">Add Activity</button>
         </div>
       </div>
     </div>
@@ -58,10 +173,44 @@
       </div>
       <div class="modal-body">
         <div class="add-from" >
-          <label for="name">Name</label>
-          <input id="name" type="text" v-model="addActivity.activityName" placeholder="Add Activity Name" required>
-          <label for="calories">Calories</label>
-          <input id="calories" type="number" v-model="addActivity.calories" placeholder="Add Calories" required>
+          <label for="activity_type">Activity Type</label>
+          <select id="activity_type" v-model="addActivity.activity_type" default="blood_pressure" disabled>
+            <option value="blood_pressure">Blood Pressure</option>
+            <option value="running">Running</option>
+            <option value="temperature">Temperature</option>
+            <option value="general">General Activity</option>
+          </select>
+
+          <!--          Blood Pressure Activity-->
+          <div v-if="addActivity.activity_type === 'blood_pressure'">
+            <label for="systolic">Systolic</label>
+            <input id="systolic" type="number" v-model="addActivity.systolic" placeholder="Systolic value" required/>
+            <label for="diastolic">Diastolic</label>
+            <input id="diastolic" type="number" v-model="addActivity.diastolic" placeholder="Diastolic value" required/>
+          </div>
+
+          <!--          Running Activity-->
+          <div v-if="addActivity.activity_type === 'running'">
+            <label for="distance">Distance</label>
+            <input id="distance" type="number" v-model="addActivity.distance" placeholder="Distance value" required/>
+            <label for="calories">Calories</label>
+            <input id="calories" type="number" v-model="addActivity.calories" placeholder="Calories value" required/>
+          </div>
+
+          <!--          Temperature Activity-->
+          <div v-if="addActivity.activity_type === 'temperature'">
+            <label for="temperature">Temperature</label>
+            <input id="temperature" type="number" v-model="addActivity.temperature" placeholder="Temperature value" required/>
+          </div>
+
+          <div v-if="addActivity.activity_type === 'general'">
+            <label for="name">Name</label>
+            <input id="name" type="text" v-model="addActivity.name" placeholder="Name" required>
+            <label for="calories">Calories</label>
+            <input id="calories" type="number" v-model="addActivity.calories" placeholder="Add Calories" required>
+          </div>
+          <label for="createdAt">Date and time</label>
+          <input id="createdAt" type="datetime-local" v-model="addActivity.createdAt" placeholder="add date and time" required/>
           <button class="btn submit-btn" @click="editActivity">Update Activity</button>
         </div>
       </div>
@@ -76,46 +225,134 @@
         users: null,
         activities:null,
         addActivity:{
-          name:'',
-          calories:null
-        }
+        },
+       bloodPressureActivities:[],
+       runningActivities:[],
+       temperatureActivities:[],
      }),
      created() {
          fetch(`/api/activities`)
             .then(res => res.json())
             .then(json => {
-                console.log(json)
                 this.activities = json
             })
             .catch(() => alert("Error while fetching activities"));
+       fetch(`/api/blood-pressure`)
+           .then(res => res.json())
+           .then(json => {
+             this.bloodPressureActivities = json
+           })
+           .catch(() => alert("Error while fetching activities"));
+       fetch(`/api/running`)
+           .then(res => res.json())
+           .then(json => {
+             this.runningActivities = json
+           })
+           .catch(() => alert("Error while fetching activities"));
+       fetch(`/api/temperature`)
+           .then(res => res.json())
+           .then(json => {
+             this.temperatureActivities = json
+           })
+           .catch(() => alert("Error while fetching activities"));
      },
     methods:{
-       async deleteActivity(id){
-          try{
-            await fetch(`api/activities/${id}`,{
-              method:"delete"
-            })
-            this.activities = this.activities.filter(activity=>activity.id !== id)
-          }catch(err){
-            alert("Failed to delete activity")
-          }
+       async deleteActivity(activityType,id){
+         switch (activityType) {
+           case "general":
+             this.makeHttpRequest(`/api/activities/${id}`, "DELETE")
+             this.activities = this.activities.filter(item => item.id !== id);
+             return;
+           case "blood_pressure":
+             this.makeHttpRequest(`api/blood-pressure/${id}`,"DELETE");
+             this.bloodPressureActivities = this.bloodPressureActivities.filter(item=>item.id!==id);
+             return;
+           case "temperature":
+             this.makeHttpRequest(`/api/temperature/${id}`,"DELETE");
+             this.temperatureActivities = this.temperatureActivities.filter(item=>item.id!==id);
+             return;
+           case "running":
+             this.makeHttpRequest(`/api/running/${id}`,"DELETE");
+             this.runningActivities = this.runningActivities.filter(item=>item.id!==id);
+           default:
+             return;
+         }
+
+      },
+
+
+      async makeHttpRequest(uri,method,body){
+         try {
+           const data = await fetch(uri, {
+             method: method,
+             body: body
+           }).then(res => res.json()).then(item => item)
+           return data;
+         }catch(err){
+           console.log(err);
+         }
       },
 
       async createActivity(){
         try{
           console.log(this.addActivity)
-          const data = await fetch('api/activities',{
-            method:"post",
-            body:JSON.stringify({
-              activityName:this.addActivity.name,
-              calories: this.addActivity.calories,
-            }),
-          }).then(res=>res.json()).then(item=>item)
-          console.log(data);
-          this.activities.push(data)
-          this.addActivity.calories=null
-          this.addActivity.name=null
-          this.closeModal("modal")
+
+          switch(this.addActivity.activity_type){
+            case "blood_pressure": {
+              const data = JSON.stringify({
+                systolic: this.addActivity.systolic,
+                diastolic: this.addActivity.diastolic,
+                createdAt: this.addActivity.createdAt,
+              })
+              const result = await this.makeHttpRequest('/api/blood-pressure', "POST", data)
+              this.bloodPressureActivities.push(result);
+              this.addActivity={}
+              this.closeModal("modal")
+              return;
+            }
+            case "running":{
+              const data = JSON.stringify({
+                distance: this.addActivity.distance,
+                calories: this.addActivity.calories,
+                createdAt: this.addActivity.createdAt
+              })
+              const result = await this.makeHttpRequest('/api/running',"POST", data)
+              this.runningActivities.push(result)
+              this.addActivity={}
+              this.closeModal("modal")
+                return;
+              }
+            case "temperature": {
+              const data = JSON.stringify({
+                temperature: this.addActivity.temperature,
+                createdAt: this.addActivity.createdAt
+              })
+              const result = await this.makeHttpRequest('/api/temperature',"POST",data);
+              this.temperatureActivities.push(result);
+              this.addActivity={}
+              this.closeModal("modal")
+              return;
+
+            }
+            case "cholestrol": {
+
+            }
+            case "general": {
+              const data = JSON.stringify({
+                calories: this.addActivity.calories,
+                activityName: this.addActivity.name,
+                createdAt: this.addActivity.createdAt
+              })
+              const result = await this.makeHttpRequest('/api/activities', "POST", data);
+              this.activities.push(result)
+              this.addActivity={}
+              this.closeModal("modal");
+              return;
+            }
+            default:
+
+          }
+
         } catch (err){
           console.log(err)
           console.log(err)
@@ -123,22 +360,106 @@
         }
       },
 
-      showEditModal(activityId){
-        this.addActivity = Object.assign({},this.activities.find(({id})=>id === activityId))
-        if(this.addActivity.id){
-          this.showModal("edit-modal")
-        }
+      showEditModal(activity_type,activityId){
+         switch (activity_type){
+           case "blood_pressure": {
+            this.addActivity=Object.assign({},{...this.bloodPressureActivities.find(({id})=>id===activityId), activity_type})
+             if(this.addActivity.id){
+               this.showModal("edit-modal")
+             }
+             return;
+           }
+           case "running":{
+             this.addActivity=Object.assign({},{...this.runningActivities.find(({id})=>id===activityId), activity_type})
+             if(this.addActivity.id){
+               this.showModal("edit-modal")
+             }
+             return;
+           }
+           case "temperature": {
+             this.addActivity=Object.assign({},{...this.temperatureActivities.find(({id})=>id===activityId), activity_type})
+             if(this.addActivity.id){
+               this.showModal("edit-modal")
+             }
+             return;
+
+           }
+           case "cholestrol": {
+
+           }
+           case "general": {
+             console.log(this.activities.find(({id})=>id===activityId))
+             const activity = this.activities.find(({id})=>id===activityId)
+             this.addActivity=Object.assign({},{...activity, name:activity.activityName, activity_type,createdAt: new Date(activity.createdAt).toISOString()})
+             if(this.addActivity.id){
+               this.showModal("edit-modal")
+             }
+             return;
+           }
+           default:
+         }
+
       },
 
       async editActivity(){
-         try{
-          const data = await fetch(`/api/activities/${this.addActivity.id}`,{
-            body:JSON.stringify(this.addActivity),
-            method:"patch"
-          }).then(res=>res.json());
-          this.activities = this.activities.map(activity=>activity.id === data.id?data:activity)
-           this.closeModal("edit-modal")
-           this.addActivity = {}
+        try{
+          switch(this.addActivity.activity_type){
+            case "blood_pressure": {
+              const data = JSON.stringify({
+                systolic: this.addActivity.systolic,
+                diastolic: this.addActivity.diastolic,
+                createdAt: this.addActivity.createdAt,
+              })
+              const result = await this.makeHttpRequest(`/api/blood-pressure/${this.addActivity.id}`, "PATCH", data)
+              this.bloodPressureActivities = this.bloodPressureActivities.map(item=>item.id===result.id?result:item);
+              this.addActivity={}
+              this.closeModal("edit-modal")
+              return;
+            }
+            case "running":{
+              const data = JSON.stringify({
+                distance: this.addActivity.distance,
+                calories: this.addActivity.calories,
+                createdAt: this.addActivity.createdAt
+              })
+              const result = await this.makeHttpRequest(`/api/running/${this.addActivity.id}`,"PATCH", data)
+              this.runningActivities = this.runningActivities.map(item=>item.id===result.id?result:item)
+              this.addActivity={}
+              this.closeModal("edit-modal")
+              return;
+            }
+            case "temperature": {
+              const data = JSON.stringify({
+                temperature: this.addActivity.temperature,
+                createdAt: this.addActivity.createdAt
+              })
+              const result = await this.makeHttpRequest(`/api/temperature/${this.addActivity.id}`,"PATCH",data);
+              this.temperatureActivities = this.temperatureActivities.push(item=>item.id===result.id?result:item);
+              this.addActivity={}
+              this.closeModal("edit-modal")
+              return;
+
+            }
+            case "cholestrol": {
+
+            }
+            case "general": {
+              const data = JSON.stringify({
+                calories: this.addActivity.calories,
+                activityName: this.addActivity.name,
+                createdAt: this.addActivity.createdAt
+              })
+              const result = await this.makeHttpRequest(`/api/activities/${this.addActivity.id}`, "PATCH", data);
+              this.activities = this.activities.map(item=>item.id===result.id?result:item)
+              this.addActivity={}
+              this.closeModal("edit-modal");
+              return;
+            }
+            default:
+
+          }
+
+
          }catch (err){
            console.log(err);
            alert("Failed to update activity")
@@ -178,7 +499,7 @@
     border:1px solid black;
     color: black;
     text-align: center;
-    width:25%;
+    min-width: fit-content;
   }
   table{
     width:100%;
@@ -249,7 +570,7 @@
     flex-direction: column;
     justify-content: center;
   }
-  .add-from input{
+  .add-from input,select{
     border:none;
     border-radius: 5px;
     margin:10px 0 10px 0;
@@ -315,6 +636,11 @@
   .link-btn:hover{
     color:lightblue;
     background-color: white;
+  }
+
+  .table-container{
+    max-height: 50vh;
+    overflow-y: scroll;
   }
 
 </style>

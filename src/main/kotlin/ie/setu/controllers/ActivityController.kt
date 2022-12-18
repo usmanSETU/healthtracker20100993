@@ -1,5 +1,6 @@
 package ie.setu.controllers
 
+import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import ie.setu.domain.Activity
@@ -11,6 +12,7 @@ import mu.KotlinLogging
 object ActivityController {
     private val ActivityDAO = ActivitiesDAO()
     private val logger = KotlinLogging.logger(){}
+    private val mapper = jacksonObjectMapper().registerModule(JodaModule())
 
     @OpenApi(
         summary = "Get all activities",
@@ -24,9 +26,10 @@ object ActivityController {
     fun getAllActivities(ctx: Context) {
         logger.info {ctx.sessionAttribute("id")}
         if(ctx.sessionAttribute<Int>("id") != null) {
-            ctx.json(ActivityDAO.findByUserId(ctx.sessionAttribute<Int>("id")!!.toInt()))
+            val userActivities = ActivityDAO.findByUserId(ctx.sessionAttribute<Int>("id")!!.toInt());
+            ctx.json(this.mapper.writeValueAsString(userActivities))
         }else{
-            ctx.json(ActivityDAO.getAll())
+            ctx.json(this.mapper.writeValueAsString(ActivityDAO.getAll()))
         }
     }
 
@@ -43,7 +46,7 @@ object ActivityController {
     fun getActivityById(ctx: Context) {
         val activity = ActivityDAO.findById(ctx.pathParam("id").toInt())
         if (activity != null) {
-            ctx.json(activity)
+            ctx.json(this.mapper.writeValueAsString(activity))
         }
     }
 
@@ -57,8 +60,7 @@ object ActivityController {
         responses = [OpenApiResponse("200"),OpenApiResponse("500")]
     )
     fun addActivity(ctx: Context) {
-        val mapper = jacksonObjectMapper()
-        val activity = mapper.readValue<Activity>(ctx.body())
+        val activity = this.mapper.readValue<Activity>(ctx.body())
         if (activity.userId == 0 && ctx.sessionAttribute<Int>("id") == null ){
              ctx.status(401).result("Unauthorized")
         }else {
@@ -67,7 +69,7 @@ object ActivityController {
             }
             val insertedRow = ActivityDAO.save(activity)
             if (insertedRow != null) {
-                ctx.json(insertedRow)
+                ctx.json(this.mapper.writeValueAsString(insertedRow))
             }else{
                 ctx.status(500).result("Something went wrong")
             }
@@ -101,13 +103,12 @@ object ActivityController {
         responses = [OpenApiResponse("200"),OpenApiResponse("500"),OpenApiResponse("404")]
     )
     fun updateActivity(ctx: Context) {
-        val mapper = jacksonObjectMapper()
-        val activityUpdates = mapper.readValue<Activity>(ctx.body())
+        val activityUpdates = this.mapper.readValue<Activity>(ctx.body())
         val updatedActivity =  ActivityDAO.update(
             id = ctx.pathParam("id").toInt(),
             activity = activityUpdates)
         if(updatedActivity != null){
-            ctx.json(updatedActivity)
+            ctx.json(this.mapper.writeValueAsString(updatedActivity))
         }else{
             ctx.status(500).result("Internal Server Error")
         }
