@@ -1,5 +1,6 @@
 package ie.setu.controllers
 
+import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import ie.setu.domain.Temperature
@@ -11,6 +12,7 @@ import mu.KotlinLogging
 object TemperatureController {
     private val temperatureDAO = TemperatureDAO()
     private val logger = KotlinLogging.logger(){}
+    private val mapper = jacksonObjectMapper().registerModule(JodaModule())
 
     @OpenApi(
         summary = "Get all temperature Activities",
@@ -24,9 +26,9 @@ object TemperatureController {
     fun getAllActivities(ctx: Context) {
         this.logger.info {ctx.sessionAttribute("id")}
         if(ctx.sessionAttribute<Int>("id") != null) {
-            ctx.json(this.temperatureDAO.findByUserId(ctx.sessionAttribute<Int>("id")!!.toInt()))
+            ctx.json(this.mapper.writeValueAsString(this.temperatureDAO.findByUserId(ctx.sessionAttribute<Int>("id")!!.toInt())))
         }else{
-            ctx.json(this.temperatureDAO.findAll())
+            ctx.json(this.mapper.writeValueAsString(this.temperatureDAO.findAll()))
         }
     }
 
@@ -43,7 +45,7 @@ object TemperatureController {
     fun getActivityById(ctx: Context) {
         val activity = this.temperatureDAO.findById(ctx.pathParam("id").toInt())
         if (activity != null) {
-            ctx.json(activity)
+            ctx.json(this.mapper.writeValueAsString(activity))
         }
     }
 
@@ -57,7 +59,7 @@ object TemperatureController {
         responses = [OpenApiResponse("200"), OpenApiResponse("500")]
     )
     fun addActivity(ctx: Context) {
-        val mapper = jacksonObjectMapper()
+        val mapper = jacksonObjectMapper().registerModule(JodaModule())
         val activity = mapper.readValue<Temperature>(ctx.body())
         if (activity.userId == 0 && ctx.sessionAttribute<Int>("id") == null ){
             ctx.status(401).result("Unauthorized")
@@ -67,7 +69,7 @@ object TemperatureController {
             }
             val insertedRow =this.temperatureDAO.save(activity)
             if (insertedRow != null) {
-                ctx.json(insertedRow)
+                ctx.json(this.mapper.writeValueAsString(insertedRow))
             }else{
                 ctx.status(500).result("Something went wrong")
             }
@@ -101,13 +103,12 @@ object TemperatureController {
         responses = [OpenApiResponse("200"), OpenApiResponse("500"), OpenApiResponse("404")]
     )
     fun updateActivity(ctx: Context) {
-        val mapper = jacksonObjectMapper()
-        val activityUpdates = mapper.readValue<Temperature>(ctx.body())
+        val activityUpdates = this.mapper.readValue<Temperature>(ctx.body())
         val updatedActivity =  this.temperatureDAO.update(
             id = ctx.pathParam("id").toInt(),
             activityUpdates)
         if(updatedActivity != null){
-            ctx.json(updatedActivity)
+            ctx.json(this.mapper.writeValueAsString(updatedActivity))
         }else{
             ctx.status(500).result("Internal Server Error")
         }

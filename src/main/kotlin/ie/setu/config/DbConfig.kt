@@ -1,6 +1,5 @@
 package ie.setu.config
-import ie.setu.domain.db.Activities
-import ie.setu.domain.db.Users
+import ie.setu.domain.db.*
 import mu.KotlinLogging
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -24,7 +23,7 @@ class DbConfig{
         )
 
         transaction{
-            SchemaUtils.createMissingTablesAndColumns(Users,Activities)
+            SchemaUtils.createMissingTablesAndColumns(Users,Activities, BloodPressures,Runings,Temperatures)
         }
 
         logger.info{"DbConfig name = " + dbConfig.name}

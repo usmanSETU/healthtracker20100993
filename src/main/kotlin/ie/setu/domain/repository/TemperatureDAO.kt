@@ -36,7 +36,6 @@ class TemperatureDAO {
     fun save(temperatureData: Temperature): Temperature? {
         val insertedId = transaction {
             Temperatures.insert {
-                it[id] = temperatureData.id
                 it[temperature] = temperatureData.temperature
                 it[userId] = temperatureData.userId
                 it[createdAt] = temperatureData.createdAt
@@ -57,7 +56,6 @@ class TemperatureDAO {
         transaction {
             Temperatures.update({ Temperatures.id.eq(id) }) {
                 it[temperature] = updateData.temperature
-                it[userId] = updateData.userId
             }
         }
         return this.findById(id)
