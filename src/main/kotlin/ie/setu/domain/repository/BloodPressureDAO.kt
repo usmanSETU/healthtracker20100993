@@ -55,7 +55,6 @@ class BloodPressureDAO {
                 it[pulse] = bloodPressure.pulse
                 it[systolic] = bloodPressure.systolic
                 it[diastolic] = bloodPressure.diastolic
-                it[userId] = bloodPressure.userId
             }
         }
         return this.findById(id)
