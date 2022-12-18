@@ -37,10 +37,6 @@
 </script>
 
 <style>
-    body{
-      background-color: black;
-      color: white;
-    }
     .signup{
         height:100%;
         width:100%;
