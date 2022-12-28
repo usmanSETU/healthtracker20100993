@@ -1,27 +1,26 @@
-/*
+
 package ie.setu.repository
 
 import ie.setu.domain.Activity
-import ie.setu.domain.User
 import ie.setu.domain.db.Activities
 import ie.setu.domain.db.Users
 import ie.setu.domain.repository.ActivitiesDAO
 import ie.setu.domain.repository.UserDAO
 import ie.setu.helpers.activities
-import ie.setu.helpers.nonExistingEmail
 import ie.setu.helpers.users
-import junit.framework.TestCase.assertEquals
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.joda.time.DateTime
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 //retrieving some test data from Fixtures
-val user4 = activities.get(0)
-val user5 = activities.get(1)
-val user6 = activities.get(2)
+val activity1 = activities[0]
+val activity2 = activities[1]
+val activity3 = activities[2]
 
 class ActivityDAOTest {
 
@@ -42,10 +41,10 @@ class ActivityDAOTest {
             transaction {
 
                 //Arrange - create and populate table with three users
-                val activityDTO = populateUserTable()
+                val activityDTO = populateActivitiesTable()
 
                 //Act & Assert
-                assertEquals(3, activityDTO.getAll().size)
+                Assertions.assertEquals(3, activityDTO.getAll().size)
             }
         }
 
@@ -54,25 +53,20 @@ class ActivityDAOTest {
             transaction {
 
                 //Arrange - create and populate table with three users
-                val activityDAO = populateUserTable()
+                val activityDAO = populateActivitiesTable()
 
                 //Act & Assert
-                assertEquals(null, activityDAO.findById(4))
+                Assertions.assertEquals(null, activityDAO.findById(4))
             }
         }
 
         @Test
-        fun `get activity by id that exists, results in a correct user returned`() {
+        fun `get activity by id that exists, results in a correct activity returned`() {
             transaction {
                 //Arrange - create and populate table with three users
-                SchemaUtils.create(Activities)
-                val activityDAO = ActivitiesDAO()
-                activityDAO.save(user4)
-                activityDAO.save(user5)
-                activityDAO.save(user6)
-
+                val activityDAO = populateActivitiesTable()
                 //Act & Assert
-                assertEquals(null, activityDAO.findById(4))
+                Assertions.assertEquals(null, activityDAO.findById(4))
             }
 
         }
@@ -85,7 +79,7 @@ class ActivityDAOTest {
                 val activityDTO = ActivitiesDAO()
 
                 //Act & Assert
-                assertEquals(0, activityDTO.getAll().size)
+                Assertions.assertEquals(0, activityDTO.getAll().size)
             }
         }
 
@@ -99,13 +93,13 @@ class ActivityDAOTest {
             transaction {
 
                 //Arrange - create and populate table with three users
-                val activityDAO = populateUserTable()
+                val activityDAO = populateActivitiesTable()
 
                 //Act & Assert
-                assertEquals(3, activityDAO.getAll().size)
-                assertEquals(user1, activityDAO.findById(user1.id))
-                assertEquals(user2, activityDAO.findById(user2.id))
-                assertEquals(user3, activityDAO.findById(user3.id))
+                Assertions.assertEquals(3, activityDAO.getAll().size)
+                Assertions.assertEquals(activity1, activityDAO.findById(user1.id))
+                Assertions.assertEquals(activity2, activityDAO.findById(user2.id))
+                Assertions.assertEquals(activity3, activityDAO.findById(user3.id))
             }
         }
     }
@@ -113,16 +107,16 @@ class ActivityDAOTest {
     @Nested
     inner class DeleteActivity {
         @Test
-        fun `deleting a non-existant activity in table results in no deletion`() {
+        fun `deleting a non-existent activity in table results in no deletion`() {
             transaction {
 
                 //Arrange - create and populate table with three activities
-                val activityDAO = populateUserTable()
+                val activityDAO = populateActivitiesTable()
 
                 //Act & Assert
-                assertEquals(3, activityDAO.getAll().size)
+                Assertions.assertEquals(3, activityDAO.getAll().size)
                 activityDAO.delete(4)
-                assertEquals(3, activityDAO.getAll().size)
+                Assertions.assertEquals(3, activityDAO.getAll().size)
             }
         }
 
@@ -131,12 +125,12 @@ class ActivityDAOTest {
             transaction {
 
                 //Arrange - create and populate table with three users
-                val acitivityDAO = populateUserTable()
+                val activityDAO = populateActivitiesTable()
 
                 //Act & Assert
-                assertEquals(3, acitivityDAO.getAll().size)
-                acitivityDAO.delete(user3.id)
-                assertEquals(2, acitivityDAO.getAll().size)
+                Assertions.assertEquals(3, activityDAO.getAll().size)
+                activityDAO.delete(user3.id)
+                Assertions.assertEquals(2, activityDAO.getAll().size)
             }
         }
     }
@@ -149,38 +143,42 @@ class ActivityDAOTest {
             transaction {
 
                 //Arrange - create and populate table with three users
-                val acitivityDAO = populateUserTable()
+                val activityDAO = populateActivitiesTable()
 
                 //Act & Assert
-                val user3Updated = User(3, "new username", "new@email.ie", password="password")
-                acitivityDAO.update(user3.id, user3Updated)
-                assertEquals(user3Updated, acitivityDAO.findById(3))
+                val activity3Updated = Activity(3, "50", "Activity Updated Name", 3, createdAt = DateTime.now() )
+                activityDAO.update(user3.id, activity3Updated)
+                activityDAO.findById(3)?.let{
+                    Assertions.assertEquals(activity3Updated.calories,it.calories)
+                    Assertions.assertEquals(activity3Updated.activityName,it.activityName)
+                }
+
             }
         }
 
         @Test
-        fun `updating non-existant activity in table results in no updates`() {
+        fun `updating non-existent activity in table results in no updates`() {
             transaction {
 
                 //Arrange - create and populate table with three users
-                val acitivityDAO = populateUserTable()
+                val activityDAO = populateActivitiesTable()
 
                 //Act & Assert
-                val user4Updated = User(4, "new username", "new@email.ie", "password1")
-                acitivityDAO.update(4, user4Updated)
-                assertEquals(null, acitivityDAO.findById(4))
-                assertEquals(3, acitivityDAO.getAll().size)
+                val activity4Updated = Activity(4, "40", "Updated Activity 4", 2, DateTime.now())
+                activityDAO.update(4, activity4Updated)
+                Assertions.assertEquals(null, activityDAO.findById(4))
+                Assertions.assertEquals(3, activityDAO.getAll().size)
             }
         }
     }
 
-    internal fun populateUserTable(): UserDAO{
-        SchemaUtils.create(Activities)
-        val userDAO = UserDAO()
-        userDAO.save(user1)
-        userDAO.save(user2)
-        userDAO.save(user3)
-        return userDAO
+    internal fun populateActivitiesTable(): ActivitiesDAO{
+        SchemaUtils.create(Activities,Users)
+        val activityDAO = ActivitiesDAO()
+        val usersDAO = UserDAO()
+        users.forEach { user -> usersDAO.save(user) }
+        activities.forEach { activity-> activityDAO.save(activity) }
+        return activityDAO
     }
 }
-*/
+
