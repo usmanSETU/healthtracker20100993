@@ -46,6 +46,8 @@ object TemperatureController {
         val activity = this.temperatureDAO.findById(ctx.pathParam("id").toInt())
         if (activity != null) {
             ctx.json(this.mapper.writeValueAsString(activity))
+        }else{
+            ctx.status(404).json("{'success':false,'message':'failed to get activity'}")
         }
     }
 
@@ -59,20 +61,24 @@ object TemperatureController {
         responses = [OpenApiResponse("200"), OpenApiResponse("500")]
     )
     fun addActivity(ctx: Context) {
-        val mapper = jacksonObjectMapper().registerModule(JodaModule())
-        val activity = mapper.readValue<Temperature>(ctx.body())
-        if (activity.userId == 0 && ctx.sessionAttribute<Int>("id") == null ){
-            ctx.status(401).result("Unauthorized")
-        }else {
-            if(activity.userId == 0) {
-                activity.userId = ctx.sessionAttribute<Int>("id")!!
+        try {
+            val mapper = jacksonObjectMapper().registerModule(JodaModule())
+            val activity = mapper.readValue<Temperature>(ctx.body())
+            if (activity.userId == 0 && ctx.sessionAttribute<Int>("id") == null) {
+                ctx.status(401).result("Unauthorized")
+            } else {
+                if (activity.userId == 0) {
+                    activity.userId = ctx.sessionAttribute<Int>("id")!!
+                }
+                val insertedRow = this.temperatureDAO.save(activity)
+                if (insertedRow != null) {
+                    ctx.json(this.mapper.writeValueAsString(insertedRow))
+                } else {
+                    ctx.status(500).result("Something went wrong")
+                }
             }
-            val insertedRow =this.temperatureDAO.save(activity)
-            if (insertedRow != null) {
-                ctx.json(this.mapper.writeValueAsString(insertedRow))
-            }else{
-                ctx.status(500).result("Something went wrong")
-            }
+        }catch (err:Exception){
+            ctx.status(500).json("{'success':false,'message':'failed to create activity'}")
         }
     }
 
@@ -103,14 +109,19 @@ object TemperatureController {
         responses = [OpenApiResponse("200"), OpenApiResponse("500"), OpenApiResponse("404")]
     )
     fun updateActivity(ctx: Context) {
-        val activityUpdates = this.mapper.readValue<Temperature>(ctx.body())
-        val updatedActivity =  this.temperatureDAO.update(
-            id = ctx.pathParam("id").toInt(),
-            activityUpdates)
-        if(updatedActivity != null){
-            ctx.json(this.mapper.writeValueAsString(updatedActivity))
-        }else{
-            ctx.status(500).result("Internal Server Error")
+        try {
+            val activityUpdates = this.mapper.readValue<Temperature>(ctx.body())
+            val updatedActivity = this.temperatureDAO.update(
+                id = ctx.pathParam("id").toInt(),
+                activityUpdates
+            )
+            if (updatedActivity != null) {
+                ctx.json(this.mapper.writeValueAsString(updatedActivity))
+            } else {
+                ctx.status(500).result("Internal Server Error")
+            }
+        }catch (err:Exception){
+            ctx.status(500).json("{'success':false,'message':'failed to update activity'}")
         }
     }
 
