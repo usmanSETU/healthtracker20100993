@@ -5,12 +5,37 @@ Overall, a health tracker web app can be a useful tool for people looking to imp
 
 ## Getting Started
 
-These instructions will give you a copy of the project up and running on
+This will give you a copy of the project up and running on
 remote for demo and testing purposes. 
+Follow the link below to use the Health Tracker App
 
-## Running the tests
+https://healthtracker20100993-production.up.railway.app/
 
-Goto the test repository to see Unit and Integration tests for this project
+Email: test@email.com
+
+Password: password
+
+## User & Activities
+
+*	User can create multiple kind of activities like blood pressure with (Systolic, Diastolic, Temperature, Running (distance, calories etc.) & General Activities 
+*	User can also add date & time to this activities
+*	User can perform CRUD operations on these activities, and  they are listed in Actions tab
+*	User can create account by Signup button
+*	User can Login by entering valid credentials (with email validation )
+*	User can Logout
+*	User can modify his profile by clicking on profile button
+
+
+## Test Coverage Reports
+
+Goto the tests repository to see Unit and Integration tests for this project
+
+
+## Agile Tooling Swagger Documentation
+
+* https://healthtracker20100993-production.up.railway.app/swagger-ui
+* https://healthtracker20100993-production.up.railway.app/redoc
+
 
 ## Authors
 
