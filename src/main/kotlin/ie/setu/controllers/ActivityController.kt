@@ -47,6 +47,8 @@ object ActivityController {
         val activity = ActivityDAO.findById(ctx.pathParam("id").toInt())
         if (activity != null) {
             ctx.json(this.mapper.writeValueAsString(activity))
+        }else{
+            ctx.status(404).json("{'success':false,'message':'failed to get activity'}")
         }
     }
 
@@ -60,19 +62,23 @@ object ActivityController {
         responses = [OpenApiResponse("200"),OpenApiResponse("500")]
     )
     fun addActivity(ctx: Context) {
-        val activity = this.mapper.readValue<Activity>(ctx.body())
-        if (activity.userId == 0 && ctx.sessionAttribute<Int>("id") == null ){
-             ctx.status(401).result("Unauthorized")
-        }else {
-            if(activity.userId == 0) {
-                activity.userId = ctx.sessionAttribute<Int>("id")!!
+        try {
+            val activity = this.mapper.readValue<Activity>(ctx.body())
+            if (activity.userId == 0 && ctx.sessionAttribute<Int>("id") == null) {
+                ctx.status(401).result("Unauthorized")
+            } else {
+                if (activity.userId == 0) {
+                    activity.userId = ctx.sessionAttribute<Int>("id")!!
+                }
+                val insertedRow = ActivityDAO.save(activity)
+                if (insertedRow != null) {
+                    ctx.json(this.mapper.writeValueAsString(insertedRow))
+                } else {
+                    ctx.status(500).result("Something went wrong")
+                }
             }
-            val insertedRow = ActivityDAO.save(activity)
-            if (insertedRow != null) {
-                ctx.json(this.mapper.writeValueAsString(insertedRow))
-            }else{
-                ctx.status(500).result("Something went wrong")
-            }
+        }catch (err:Exception){
+            ctx.status(500).json("{'success':false,'message':'failed to add activity'}")
         }
     }
 
