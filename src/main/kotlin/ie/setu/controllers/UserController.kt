@@ -66,7 +66,7 @@ object UserController {
                 )
             )
             if (user != null) {
-                ctx.sessionAttribute("id", user)
+                ctx.sessionAttribute("id", user.id.toString())
                 return ctx.redirect("/home", 302)
             } else {
                 ctx.status(500).json("{success:false,message:'Failed to signup user'}")
