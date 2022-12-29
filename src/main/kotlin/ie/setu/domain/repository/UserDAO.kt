@@ -26,14 +26,16 @@ class UserDAO {
         }
     }
 
-    fun save(user: User):ResultRow?{
-        return transaction {
+    fun save(user: User):User?{
+        val insertedId = transaction {
             Users.insert{
                 it[name] = user.name
                 it[email] = user.email
                 it[password] = user.password
-            }.resultedValues?.first()
-        }
+            }
+        } get Users.id
+
+        return this.findById(insertedId)
     }
 
     fun findByEmail(email: String) :User?{
