@@ -9,12 +9,12 @@
       <button class="btn logout-btn">Logout</button>
       </form>
       <a class="btn link-btn" href="/profile">Profile</a>
+      <button class="btn add-btn" @click="showModal('modal')">Add Activity</button>
     </div>
   </header>
 
   <section class="activtity-header">
-  <h3 class="title">Activities</h3>
-    <button class="btn add-btn" @click="showModal('modal')">Add Activity</button>
+    <h3 class="title">Activities</h3>
   </section>
 
   <section class="table-container">
@@ -41,7 +41,6 @@
 
   <section class="activtity-header">
     <h3 class="title">Blood Pressure Activities</h3>
-    <button class="btn add-btn" @click="showModal('modal')">Add Activity</button>
   </section>
   <section class="table-container">
     <table>
@@ -67,7 +66,6 @@
 
   <section class="activtity-header">
     <h3 class="title">Running Activities</h3>
-    <button class="btn add-btn" @click="showModal('modal')">Add Activity</button>
   </section>
   <section class="table-container">
     <table>
@@ -93,7 +91,6 @@
 
   <section class="activtity-header">
     <h3 class="title">Temperature Activities</h3>
-    <button class="btn add-btn" @click="showModal('modal')">Add Activity</button>
   </section>
   <section class="table-container">
     <table>
