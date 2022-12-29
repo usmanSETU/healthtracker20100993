@@ -17,7 +17,7 @@ Password: password
 
 ## User & Activities
 
-*	User can create multiple kind of activities like blood pressure with (Systolic, Diastolic, Temperature, Running (distance, calories etc.) & General Activities 
+*	User can create multiple kind of activities like blood pressure with (Systolic, Diastolic), Temperature, Running & General Activities 
 *	User can also add date & time to this activities
 *	User can perform CRUD operations on these activities, and  they are listed in Actions tab
 *	User can create account by Signup button
