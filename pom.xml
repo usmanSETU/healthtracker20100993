@@ -18,6 +18,15 @@
         <junit.platform.version>1.8.2</junit.platform.version>
     </properties>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jcenter</id>
+            <name>JCenter</name>
+            <url>https://jcenter.bintray.com/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+
     <dependencies>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -117,6 +126,19 @@
         <testSourceDirectory>src/test/kotlin</testSourceDirectory>
 
         <plugins>
+            <plugin>
+                <groupId>org.jetbrains.dokka</groupId>
+                <artifactId>dokka-maven-plugin</artifactId>
+                <version>1.7.20</version>
+                <executions>
+                    <execution>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>dokka</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
