@@ -1,10 +1,7 @@
 package ie.setu.controllers
 
 import ie.setu.config.DbConfig
-import ie.setu.domain.Activity
-import ie.setu.domain.BloodPressure
-import ie.setu.domain.Running
-import ie.setu.domain.User
+import ie.setu.domain.*
 import ie.setu.helpers.ServerContainer
 import kong.unirest.Unirest
 import ie.setu.domain.db.*
@@ -537,6 +534,136 @@ class HealthTrackerControllerTest {
             @Test
             fun`deleting an activity with non-existing id should not make any changes`(){
                 val deleteReponse = Unirest.delete("$origin/api/running/0").asString()
+                assertEquals(200,deleteReponse.status)
+            }
+        }
+
+    }
+
+    @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class TemperatureActivityControllerTest{
+        @BeforeAll
+        fun `setup`() {
+            val user = addUser(validName, validEmail, "password")
+        }
+
+        @AfterAll
+        fun `teardown`() {
+            val user = jsonToObject<User>(getUserByEmail(validEmail).body)
+            deleteUser(user.id)
+        }
+
+        @Nested
+        inner class CreateActivityTest {
+            @Test
+            fun `Creating an activity with valid data should return 200 status`() {
+                val user = jsonToObject<User>(getUserByEmail(validEmail).body)
+                val activityResponse = Unirest
+                    .post("$origin/api/temperature")
+                    .body("{\"temperature\":\"72\",\"userId\":\"${user.id}\",\"createdAt\":\"${DateTime.now()}\"}")
+                    .asJson()
+                assertEquals(200, activityResponse.status)
+                val activity = jsonNodeToObject<Temperature>(activityResponse)
+                Unirest.delete("$origin/api/temperature/${activity.id}")
+            }
+
+            @Test
+            fun `Creating an activity with invalid data should return 500 status`() {
+                val user = jsonToObject<User>(getUserByEmail(validEmail).body)
+                val activityResponse = Unirest
+                    .post("$origin/api/temperature")
+                    .body("{\"createdAt\":\"${DateTime.now()}\"}")
+                    .asJson()
+                assertEquals(500, activityResponse.status)
+            }
+
+            @Test
+            fun `Creating an activity with invalid userId should return 401 status`() {
+                val activityResponse = Unirest
+                    .post("$origin/api/temperature")
+                    .body("{\"temperature\":\"72\",\"userId\":\"${0}\",\"createdAt\":\"${DateTime.now()}\"}")
+                    .asJson()
+                assertEquals(500, activityResponse.status)
+            }
+        }
+
+        @Nested
+        inner  class ReadActivityTest {
+            @Test
+            fun `get all activities should return 200`(){
+                val activityResponse = Unirest.get("$origin/api/temperature").asString()
+                assertEquals(200,activityResponse.status)
+            }
+            @Test
+            fun `get an activity by id should return 200 status`(){
+                val userResponse = getUserByEmail(validEmail)
+                val user = jsonToObject<User>(getUserByEmail(validEmail).body)
+                val activityResponse = Unirest
+                    .post("$origin/api/temperature")
+                    .body("{\"temperature\":\"72\",\"userId\":\"${user.id}\",\"createdAt\":\"${DateTime.now()}\"}")
+                    .asJson()
+                val activity = jsonNodeToObject<Temperature>(activityResponse)
+
+                val getActivityResponse = Unirest.get("$origin/api/temperature/${activity.id}").asJson()
+                assertEquals(200,getActivityResponse.status)
+                Unirest.delete("$origin/api/temperature/${activity.id}")
+            }
+
+            @Test
+            fun `getting an activity by non-existing id should return 404 status`(){
+                val activityResponse = Unirest.get("$origin/api/temperature/${0}").asString()
+                assertEquals(404,activityResponse.status)
+            }
+        }
+
+        @Nested
+        inner class UpdateActivityTest{
+            @Test
+            fun`updating an activity with valid data should return 200 status`(){
+                val user = jsonToObject<User>(getUserByEmail(validEmail).body)
+                val activityResponse = Unirest
+                    .post("$origin/api/temperature")
+                    .body("{\"temperature\":\"72\",\"userId\":\"${user.id}\",\"createdAt\":\"${DateTime.now()}\"}")
+                    .asJson()
+                val activity = jsonNodeToObject<Temperature>(activityResponse)
+                val updatedActivityResponse = Unirest
+                    .patch("$origin/api/temperature/${activity.id}")
+                    .body("{\"temperature\":\"102\",\"userId\":\"${user.id}\",\"createdAt\":\"${DateTime.now()}\"}")
+                    .asJson()
+                assertEquals(200,updatedActivityResponse.status)
+                Unirest.delete("$origin/api/temperature/${activity.id}")
+            }
+
+            @Test
+            fun`updating an activity with invalid data should return 500 status`(){
+                val updatedActivityReponse = Unirest
+                    .patch("$origin/api/temperature/${0}")
+                    .body("{\"temperature\":\"72\",\"createdAt\":\"${DateTime.now()}\"}")
+                    .asJson()
+                assertEquals(500,updatedActivityReponse.status)
+            }
+        }
+
+        @Nested
+        inner class DeleteActivityTest{
+            @Test
+            fun`deleting an activity with valid id should remove it from table`(){
+                val user = jsonToObject<User>(getUserByEmail(validEmail).body)
+                val activityResponse = Unirest
+                    .post("$origin/api/temperature")
+                    .body("{\"temperature\":\"72\",\"userId\":\"${user.id}\",\"createdAt\":\"${DateTime.now()}\"}")
+                    .asJson()
+                val activity = jsonNodeToObject<Temperature>(activityResponse)
+                Unirest.delete("$origin/api/temperature/${activity.id}").asJsonAsync(Callback {
+                    val getActivityResponse = Unirest.get("$origin/api/temperature/${activity.id}").asString()
+                    assertEquals(404,getActivityResponse.status)
+                })
+            }
+
+            @Test
+            fun`deleting an activity with non-existing id should not make any changes`(){
+                val deleteReponse = Unirest.delete("$origin/api/temperature/0").asString()
                 assertEquals(200,deleteReponse.status)
             }
         }
