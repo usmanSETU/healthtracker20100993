@@ -14,6 +14,7 @@
             <label for="password">Password</label>
             <input v-model="password" required type="password" name="password" placeholder="Enter Password"  id="password">
             <button type="submit">signup</button>
+            <p>Already have an account? <a href="/">Login here</a></p>
         </div>
     </div>
     </form>
