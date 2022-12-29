@@ -1,3 +1,4 @@
+
 package ie.setu.repository
 
 import ie.setu.domain.User
@@ -14,9 +15,9 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 //retrieving some test data from Fixtures
-val user1 = users.get(0)
-val user2 = users.get(1)
-val user3 = users.get(2)
+val user1 = users[0]
+val user2 = users[1]
+val user3 = users[2]
 
 class UserDAOTest {
 
@@ -169,21 +170,21 @@ class UserDAOTest {
                 val userDAO = populateUserTable()
 
                 //Act & Assert
-                val user3Updated = User(3, "new username", "new@email.ie")
+                val user3Updated = User(3, "new username", "new@email.ie", password = "password")
                 userDAO.update(user3.id, user3Updated)
                 assertEquals(user3Updated, userDAO.findById(3))
             }
         }
 
         @Test
-        fun `updating non-existant user in table results in no updates`() {
+        fun `updating non-existent user in table results in no updates`() {
             transaction {
 
                 //Arrange - create and populate table with three users
                 val userDAO = populateUserTable()
 
                 //Act & Assert
-                val user4Updated = User(4, "new username", "new@email.ie")
+                val user4Updated = User(4, "new username", "new@email.ie", password = "password")
                 userDAO.update(4, user4Updated)
                 assertEquals(null, userDAO.findById(4))
                 assertEquals(3, userDAO.getAll().size)

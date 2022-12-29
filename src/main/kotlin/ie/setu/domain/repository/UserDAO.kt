@@ -26,12 +26,13 @@ class UserDAO {
         }
     }
 
-    fun save(user: User){
-        transaction {
+    fun save(user: User):ResultRow?{
+        return transaction {
             Users.insert{
                 it[name] = user.name
                 it[email] = user.email
-            }
+                it[password] = user.password
+            }.resultedValues?.first()
         }
     }
 
@@ -52,12 +53,23 @@ class UserDAO {
         }
     }
 
-    fun update(id: Int, user: User){
+    fun update(id: Int, user: User): User? {
         transaction {
             Users.update({Users.id eq id}){
                 it[email] = user.email
                 it[name] = user.name
             }
+        }
+        return this.findById(id)
+    }
+
+    fun authenticate(email:String,password:String):User?{
+        return transaction {
+            Users.select() {
+                (Users.email eq email) and (Users.password eq password)
+            }.map {
+                mapToUser(it)
+            }.firstOrNull()
         }
     }
 }
