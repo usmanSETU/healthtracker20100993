@@ -46,6 +46,8 @@ object RunningsController {
         val activity = this.runningDAO.findById(ctx.pathParam("id").toInt())
         if (activity != null) {
             ctx.json(this.mapper.writeValueAsString(activity))
+        }else{
+            ctx.status(404).json("{'success':false,'message':'failed to get activity'}")
         }
     }
 
@@ -59,19 +61,23 @@ object RunningsController {
         responses = [OpenApiResponse("200"), OpenApiResponse("500")]
     )
     fun addActivity(ctx: Context) {
-        val activity = this.mapper.readValue<Running>(ctx.body())
-        if (activity.userId == 0 && ctx.sessionAttribute<Int>("id") == null ){
-            ctx.status(401).result("Unauthorized")
-        }else {
-            if(activity.userId == 0) {
-                activity.userId = ctx.sessionAttribute<Int>("id")!!
+        try {
+            val activity = this.mapper.readValue<Running>(ctx.body())
+            if (activity.userId == 0 && ctx.sessionAttribute<Int>("id") == null) {
+                ctx.status(401).result("Unauthorized")
+            } else {
+                if (activity.userId == 0) {
+                    activity.userId = ctx.sessionAttribute<Int>("id")!!
+                }
+                val insertedRow = this.runningDAO.save(activity)
+                if (insertedRow != null) {
+                    ctx.json(this.mapper.writeValueAsString(insertedRow))
+                } else {
+                    ctx.status(500).result("Something went wrong")
+                }
             }
-            val insertedRow =this.runningDAO.save(activity)
-            if (insertedRow != null) {
-                ctx.json(this.mapper.writeValueAsString(insertedRow))
-            }else{
-                ctx.status(500).result("Something went wrong")
-            }
+        }catch (err:Exception){
+            ctx.status(500).json("{'success':false,'message':'failed to create activity'}")
         }
     }
 
@@ -102,14 +108,19 @@ object RunningsController {
         responses = [OpenApiResponse("200"), OpenApiResponse("500"), OpenApiResponse("404")]
     )
     fun updateActivity(ctx: Context) {
-        val activityUpdates = this.mapper.readValue<Running>(ctx.body())
-        val updatedActivity =  this.runningDAO.update(
-            id = ctx.pathParam("id").toInt(),
-             activityUpdates)
-        if(updatedActivity != null){
-            ctx.json(this.mapper.writeValueAsString(updatedActivity))
-        }else{
-            ctx.status(500).result("Internal Server Error")
+        try {
+            val activityUpdates = this.mapper.readValue<Running>(ctx.body())
+            val updatedActivity = this.runningDAO.update(
+                id = ctx.pathParam("id").toInt(),
+                activityUpdates
+            )
+            if (updatedActivity != null) {
+                ctx.json(this.mapper.writeValueAsString(updatedActivity))
+            } else {
+                ctx.status(500).result("Internal Server Error")
+            }
+        }catch (err:Exception){
+            ctx.status(500).json("{'success':false,'message':'failed to update activity'}")
         }
     }
 
