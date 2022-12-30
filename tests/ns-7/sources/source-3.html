@@ -1,0 +1,129 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > SessionKt</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">ie.setu.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: SessionKt (ie.setu.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SessionKt</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package ie.setu.utils
+&nbsp;
+&nbsp;import org.eclipse.jetty.server.session.*
+&nbsp;
+&nbsp;//fun fileSessionHandler() = SessionHandler().apply {
+&nbsp;//    sessionCache = DefaultSessionCache(this).apply {
+&nbsp;//        sessionDataStore = FileSessionDataStore().apply {
+&nbsp;//            val baseDir = File(System.getProperty(&quot;java.io.tmpdir&quot;))
+&nbsp;//            this.storeDir = File(baseDir, &quot;javalin-session-store&quot;).apply { mkdir() }
+&nbsp;//        }
+&nbsp;//    }
+&nbsp;//    httpOnly = true
+&nbsp;//}
+&nbsp;
+<b class="fc">&nbsp;fun sqlSessionHandler(): SessionHandler = SessionHandler().apply {</b>
+<b class="fc">&nbsp;    sessionCache = DefaultSessionCache(this).apply {</b>
+<b class="fc">&nbsp;        sessionDataStore = JDBCSessionDataStoreFactory().apply {</b>
+<b class="fc">&nbsp;            setDatabaseAdaptor(DatabaseAdaptor().apply {</b>
+<b class="fc">&nbsp;                setDriverInfo(&quot;org.postgresql.Driver&quot;,</b>
+<b class="fc">&nbsp;                    &quot;jdbc:postgresql://lucky.db.elephantsql.com:5432/eflinqga?sslmode=require&amp;user=eflinqga&amp;password=0We1w7m9NbtoJssZQ89waH8rr4tg7KQR&quot;)</b>
+&nbsp;//                datasource = db // you can set data source here (for connection pooling, etc)
+<b class="fc">&nbsp;            })</b>
+<b class="fc">&nbsp;        }.getSessionDataStore(sessionHandler)</b>
+<b class="fc">&nbsp;    }</b>
+<b class="fc">&nbsp;    httpOnly = true</b>
+<b class="fc">&nbsp;}</b>
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-12-29 23:45</div>
+</div>
+</body>
+</html>

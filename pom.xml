@@ -146,6 +146,7 @@
             <version>3.13.11</version>
             <classifier>standalone</classifier>
         </dependency>
+
     </dependencies>
 
     <build>
